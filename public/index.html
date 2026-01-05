@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarCleaning - Instant Quote</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: {
+              brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
+              trust: { 500: '#22c55e' }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        .step-disabled { opacity: 0.5; pointer-events: none; filter: blur(1px); }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* Honeypot hidden field */
+        .website-url-field { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-800 font-sans antialiased">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-100 sticky top-0 z-40 shadow-sm">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between max-w-6xl">
+            <div class="flex items-center gap-2">
+                <i data-lucide="sparkles" class="text-brand-600"></i>
+                <span class="font-bold text-xl tracking-tight text-slate-900">Star<span class="text-brand-600">Cleaning</span></span>
+            </div>
+            <a href="tel:+18005550123" class="flex items-center gap-2 text-slate-600 hover:text-brand-600 font-medium transition-colors">
+                <div class="bg-brand-50 p-2 rounded-full"><i data-lucide="phone" class="w-4 h-4 text-brand-600"></i></div>
+                <span class="hidden sm:inline font-bold">(800) 555-0123</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+            
+            <!-- LEFT COLUMN: FORM -->
+            <div class="w-full lg:w-2/3 space-y-6">
+                
+                <!-- SECURITY: HONEYPOT FIELD -->
+                <div class="website-url-field">
+                    <label for="website_url">Leave this field empty</label>
+                    <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
+                </div>
+
+                <!-- Step 1: Location -->
+                <div id="step-1" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 transition-all hover:border-brand-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div id="step-1-indicator" class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">1</div>
+                        <h2 class="text-xl font-bold text-slate-900">Where do you need cleaning?</h2>
+                    </div>
+                    <div class="relative max-w-sm">
+                        <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                        <input type="text" id="zipcode" maxlength="5" placeholder="Enter Zip Code" 
+                            class="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-white text-slate-900 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all placeholder:text-slate-400 shadow-sm text-lg">
+                        <div id="zip-loading" class="absolute right-4 top-1/2 -translate-y-1/2 hidden"><i data-lucide="loader-2" class="animate-spin text-brand-600"></i></div>
+                        <div id="zip-success" class="absolute right-4 top-1/2 -translate-y-1/2 hidden"><i data-lucide="check-circle" class="text-trust-500"></i></div>
+                    </div>
+                    <div id="zip-msg" class="mt-3 text-sm font-medium text-trust-500 hidden fade-in">
+                        <span class="bg-green-50 px-3 py-1 rounded-md border border-green-100 flex items-center gap-2 w-fit">
+                            <i data-lucide="check" class="w-3 h-3"></i> Service available in <span id="city-name"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Step 2: Contact -->
+                <div id="step-2" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 step-disabled transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">2</div>
+                        <h2 class="text-xl font-bold text-slate-900">Contact Info</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="fname" placeholder="First Name" class="input-clean">
+                        <input type="text" id="lname" placeholder="Last Name" class="input-clean">
+                        <input type="tel" id="phone" placeholder="(555) 555-5555" class="input-clean">
+                        <input type="email" id="email" placeholder="email@address.com" class="input-clean">
+                    </div>
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <input type="checkbox" id="tcpa" class="mt-1 w-5 h-5 text-brand-600 rounded border-gray-300 focus:ring-brand-500 cursor-pointer">
+                        <label for="tcpa" class="text-xs text-slate-500 cursor-pointer select-none">
+                            By clicking check price, I agree to receive automated marketing text messages and calls from StarCleaning at the phone number provided. Consent is not a condition of purchase. Msg & data rates may apply.
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 3: Home Details -->
+                <div id="step-3" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 step-disabled transition-all">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">3</div>
+                        <h2 class="text-xl font-bold text-slate-900">Home Details</h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- Bedrooms -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-700">Bedrooms</label>
+                            <div class="flex gap-2" id="bedrooms-container">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+                        <!-- Bathrooms -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-700">Bathrooms</label>
+                            <div class="flex gap-2" id="bathrooms-container">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Service -->
+                <div id="step-4" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 step-disabled transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">4</div>
+                        <h2 class="text-xl font-bold text-slate-900">Service Frequency</h2>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="flex p-1 bg-slate-100 rounded-xl mb-6">
+                        <button onclick="setTab('recurring')" id="tab-recurring" class="flex-1 py-3 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all">Recurring (Save $)</button>
+                        <button onclick="setTab('onetime')" id="tab-onetime" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all">One-Time</button>
+                    </div>
+
+                    <!-- Recurring Options -->
+                    <div id="recurring-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 fade-in">
+                        <!-- Options generated by JS -->
+                    </div>
+
+                    <!-- One Time Options -->
+                    <div id="onetime-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden fade-in">
+                         <!-- Options generated by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: SUMMARY (Sticky) -->
+            <div class="w-full lg:w-1/3 lg:sticky lg:top-24">
+                <div class="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden">
+                    <div class="bg-slate-900 text-white p-4 text-center">
+                        <h3 class="font-bold text-lg">Your Quote</h3>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div id="summary-placeholder" class="text-center py-8">
+                            <div class="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i data-lucide="lock" class="text-slate-400"></i>
+                            </div>
+                            <p class="text-sm text-slate-500">Complete the form to see your price.</p>
+                        </div>
+
+                        <div id="summary-content" class="hidden space-y-4">
+                            <div class="space-y-2 text-sm text-slate-600 pb-4 border-b border-slate-100">
+                                <div class="flex justify-between">
+                                    <span id="sum-home">1 Bed, 1 Bath</span>
+                                    <span class="font-bold text-slate-900">Included</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span id="sum-freq">Weekly</span>
+                                    <span id="sum-discount" class="text-trust-500 font-bold">-20%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-end">
+                                <span class="text-slate-500 font-medium">Estimated Total</span>
+                                <div class="text-right">
+                                    <span id="sum-loader" class="hidden"><i data-lucide="loader-2" class="animate-spin text-slate-400"></i></span>
+                                    <span id="sum-total" class="text-3xl font-bold text-slate-900">$0</span>
+                                </div>
+                            </div>
+
+                            <button id="book-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-lg shadow-lg shadow-brand-500/30 transition-all active:scale-95 mt-2">
+                                Book Your Cleaning Now
+                            </button>
+                            <p class="text-[10px] text-center text-slate-400 mt-2">No credit card required for quote</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="mt-6 bg-white rounded-xl shadow-sm border border-slate-100 p-6 space-y-3">
+                    <div class="flex items-center gap-2 text-sm text-slate-600">
+                        <i data-lucide="shield-check" class="text-brand-500 w-5 h-5"></i> <span>Background Checked</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-600">
+                        <i data-lucide="thumbs-up" class="text-brand-500 w-5 h-5"></i> <span>100% Satisfaction Guarantee</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-600">
+                        <i data-lucide="clock" class="text-brand-500 w-5 h-5"></i> <span>Instant Online Booking</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <style>
+        .input-clean {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background-color: white;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        .input-clean:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+        }
+        .btn-select {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #475569;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .btn-select:hover { background: #f0f9ff; border-color: #7dd3fc; }
+        .btn-select.active {
+            background: #0284c7;
+            color: white;
+            border-color: #0284c7;
+            box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.2);
+        }
+        .service-card {
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .service-card:hover { border-color: #7dd3fc; }
+        .service-card.active {
+            background: #f0f9ff;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 1px #0ea5e9;
+        }
+    </style>
+
+    <script>
+        // --- CONSTANTS & CONFIG ---
+        const state = {
+            zip: '',
+            city: '',
+            contact: { valid: false },
+            home: { bedrooms: 1, bathrooms: 1 },
+            service: { type: 'Standard', frequency: 'Weekly' }, // Defaults
+            tab: 'recurring'
+        };
+
+        const BEDROOM_OPTS = [1, 2, 3, 4, 5];
+        const BATHROOM_OPTS = [1, 1.5, 2, 2.5, 3];
+
+        const RECURRING_OPTS = [
+            { id: 'Weekly', label: 'Weekly', discount: '20% OFF' },
+            { id: 'BiWeekly', label: 'Every 2 Weeks', discount: '15% OFF' },
+            { id: 'Monthly', label: 'Every 4 Weeks', discount: '10% OFF' }
+        ];
+
+        const ONETIME_OPTS = [
+            { id: 'Standard', label: 'Standard Clean', desc: 'Design with Time' },
+            { id: 'Deep', label: 'Deep Clean', desc: 'Popular first time' },
+            { id: 'MoveInOut', label: 'Move-In/Move-Out', desc: 'Empty home' }
+        ];
+
+        // --- DOM ELEMENTS ---
+        const els = {
+            zipInput: document.getElementById('zipcode'),
+            step2: document.getElementById('step-2'),
+            step3: document.getElementById('step-3'),
+            step4: document.getElementById('step-4'),
+            bedrooms: document.getElementById('bedrooms-container'),
+            bathrooms: document.getElementById('bathrooms-container'),
+            tcpa: document.getElementById('tcpa'),
+            contactInputs: document.querySelectorAll('#step-2 input[type="text"], #step-2 input[type="tel"], #step-2 input[type="email"]'),
+            summary: {
+                placeholder: document.getElementById('summary-placeholder'),
+                content: document.getElementById('summary-content'),
+                total: document.getElementById('sum-total'),
+                home: document.getElementById('sum-home'),
+                freq: document.getElementById('sum-freq'),
+                discount: document.getElementById('sum-discount'),
+                loader: document.getElementById('sum-loader')
+            }
+        };
+
+        // --- INIT ---
+        lucide.createIcons();
+        renderSelectors();
+        renderServiceOptions();
+
+        // --- EVENT LISTENERS ---
+        
+        // 1. Zip Code Logic
+        els.zipInput.addEventListener('input', (e) => {
+            const val = e.target.value.replace(/\D/g, '');
+            e.target.value = val;
+            
+            if (val.length === 5) {
+                // Simulate loading
+                document.getElementById('zip-loading').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('zip-loading').classList.add('hidden');
+                    document.getElementById('zip-success').classList.remove('hidden');
+                    document.getElementById('zip-msg').classList.remove('hidden');
+                    document.getElementById('city-name').innerText = "Beverly Hills"; // Mock
+                    document.getElementById('step-1').classList.add('border-trust-500');
+                    
+                    state.zip = val;
+                    state.city = "Beverly Hills";
+                    unlockStep(els.step2);
+                }, 600);
+            }
+        });
+
+        // 2. Contact Logic
+        [...els.contactInputs, els.tcpa].forEach(input => {
+            input.addEventListener('input', validateContact);
+            input.addEventListener('change', validateContact);
+        });
+
+        function validateContact() {
+            const fname = document.getElementById('fname').value;
+            const lname = document.getElementById('lname').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const tcpa = els.tcpa.checked;
+
+            if (fname && lname && phone.length >= 10 && email.includes('@') && tcpa) {
+                state.contact.valid = true;
+                unlockStep(els.step3);
+                unlockStep(els.step4);
+                showSummary();
+                fetchPrice(); // Initial fetch
+            } else {
+                state.contact.valid = false;
+            }
+        }
+
+        // --- HELPER FUNCTIONS ---
+
+        function unlockStep(el) {
+            el.classList.remove('step-disabled');
+            el.classList.add('fade-in');
+        }
+
+        function renderSelectors() {
+            // Bedrooms
+            els.bedrooms.innerHTML = BEDROOM_OPTS.map(num => 
+                `<button onclick="setHome('bedrooms', ${num})" class="btn-select ${state.home.bedrooms === num ? 'active' : ''}">${num}</button>`
+            ).join('');
+
+            // Bathrooms
+            els.bathrooms.innerHTML = BATHROOM_OPTS.map(num => 
+                `<button onclick="setHome('bathrooms', ${num})" class="btn-select ${state.home.bathrooms === num ? 'active' : ''}">${num}</button>`
+            ).join('');
+        }
+
+        function setHome(key, val) {
+            state.home[key] = val;
+            renderSelectors();
+            updateSummaryText();
+            fetchPrice();
+        }
+
+        function renderServiceOptions() {
+            const recContainer = document.getElementById('recurring-options');
+            recContainer.innerHTML = RECURRING_OPTS.map(opt => `
+                <div onclick="setService('frequency', '${opt.id}')" class="service-card ${state.service.frequency === opt.id ? 'active' : ''}">
+                    <div class="flex justify-between items-start">
+                        <span class="font-bold text-slate-800">${opt.label}</span>
+                        <span class="text-[10px] bg-brand-100 text-brand-700 px-2 py-1 rounded font-bold">${opt.discount}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            const oneTimeContainer = document.getElementById('onetime-options');
+            oneTimeContainer.innerHTML = ONETIME_OPTS.map(opt => `
+                <div onclick="setService('type', '${opt.id}')" class="service-card ${state.service.type === opt.id ? 'active' : ''}">
+                    <div class="font-bold text-slate-800">${opt.label}</div>
+                    <div class="text-xs text-slate-500">${opt.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        window.setTab = (tabName) => {
+            state.tab = tabName;
+            const recBtn = document.getElementById('tab-recurring');
+            const oneBtn = document.getElementById('tab-onetime');
+            const recOpts = document.getElementById('recurring-options');
+            const oneOpts = document.getElementById('onetime-options');
+
+            if (tabName === 'recurring') {
+                recBtn.className = "flex-1 py-3 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all";
+                oneBtn.className = "flex-1 py-3 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all";
+                recOpts.classList.remove('hidden');
+                oneOpts.classList.add('hidden');
+                // Reset logic to a default recurring
+                state.service.frequency = 'Weekly'; 
+                state.service.type = 'Standard';
+            } else {
+                oneBtn.className = "flex-1 py-3 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all";
+                recBtn.className = "flex-1 py-3 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all";
+                oneOpts.classList.remove('hidden');
+                recOpts.classList.add('hidden');
+                // Reset logic to a default one-time
+                state.service.frequency = 'OneTime';
+                state.service.type = 'Standard';
+            }
+            renderServiceOptions();
+            updateSummaryText();
+            fetchPrice();
+        }
+
+        window.setService = (key, val) => {
+            if (key === 'frequency') {
+                state.service.frequency = val;
+                state.service.type = 'Standard'; // Recurring implies standard usually
+            } else {
+                state.service.type = val;
+                state.service.frequency = 'OneTime';
+            }
+            renderServiceOptions();
+            updateSummaryText();
+            fetchPrice();
+        }
+
+        function showSummary() {
+            els.summary.placeholder.classList.add('hidden');
+            els.summary.content.classList.remove('hidden');
+            els.summary.content.classList.add('fade-in');
+        }
+
+        function updateSummaryText() {
+            els.summary.home.innerText = `${state.home.bedrooms} Bed, ${state.home.bathrooms} Bath`;
+            
+            if (state.tab === 'recurring') {
+                els.summary.freq.innerText = state.service.frequency;
+                const opt = RECURRING_OPTS.find(o => o.id === state.service.frequency);
+                els.summary.discount.innerText = opt ? opt.discount : '';
+            } else {
+                const opt = ONETIME_OPTS.find(o => o.id === state.service.type);
+                els.summary.freq.innerText = opt ? opt.label : 'One-Time';
+                els.summary.discount.innerText = '';
+            }
+        }
+
+        // --- API INTEGRATION ---
+        let debounceTimer;
+        
+        async function fetchPrice() {
+            if (!state.contact.valid) return;
+
+            // Security: Check Honeypot
+            const honeypot = document.getElementById('website_url').value;
+            if (honeypot) {
+                console.warn("Spam detected");
+                return; 
+            }
+
+            // UI Feedback
+            els.summary.total.classList.add('opacity-50');
+            els.summary.loader.classList.remove('hidden');
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch('/api/quote', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            bedrooms: state.home.bedrooms,
+                            bathrooms: state.home.bathrooms,
+                            type: state.service.type,
+                            frequency: state.service.frequency
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    // Update DOM
+                    els.summary.total.innerText = `$${Math.round(data.total)}`;
+                    
+                } catch (error) {
+                    console.error("Pricing error", error);
+                } finally {
+                    els.summary.total.classList.remove('opacity-50');
+                    els.summary.loader.classList.add('hidden');
+                }
+            }, 500); // 500ms debounce
+        }
+
+        document.getElementById('book-btn').addEventListener('click', () => {
+            alert("Secure Booking Request Sent!");
+        });
+
+    </script>
+</body>
+</html>
