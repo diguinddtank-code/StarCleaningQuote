@@ -20,6 +20,17 @@ export const MOCK_CITIES: Record<string, string> = {
   '60601': 'Chicago',
   '94105': 'San Francisco',
   '75001': 'Dallas',
-  // Fallback for demo
+  
+  // South Carolina (Requested)
+  '29483': 'Summerville',
+  '29484': 'Summerville',
+  '29485': 'Summerville',
+  '29401': 'Charleston',
+  '29403': 'Charleston',
+  '29407': 'Charleston',
+  '29412': 'Charleston',
+  '29414': 'Charleston',
+  
+  // Fallback
   'default': 'Your City'
 };
