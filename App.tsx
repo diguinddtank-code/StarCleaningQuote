@@ -228,10 +228,10 @@ export default function App() {
             <button 
               className="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg active:scale-95 transition-all text-sm"
               onClick={() => {
-                alert("Booking Submitted! (Demo)");
+                alert("Request received! Our team will call you shortly to confirm availability.");
               }}
             >
-              Book Now
+              Request Quote
             </button>
           </div>
         </div>
