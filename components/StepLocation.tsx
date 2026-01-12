@@ -50,17 +50,17 @@ export const StepLocation: React.FC<StepLocationProps> = ({ value, city, isValid
   }, [value]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center gap-3 mb-2">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors ${isValid ? 'bg-green-100 text-green-700' : 'bg-brand-100 text-brand-700'}`}>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors flex-shrink-0 ${isValid ? 'bg-green-100 text-green-700' : 'bg-brand-100 text-brand-700'}`}>
           {isValid ? <CheckCircle className="w-5 h-5" /> : '1'}
         </div>
-        <h2 className="text-xl font-bold text-slate-900">Where do you need cleaning?</h2>
+        <h2 className="text-xl font-bold text-slate-900 leading-tight">Where do you need cleaning?</h2>
       </div>
 
-      <div className="relative max-w-sm">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-          <MapPin className="w-5 h-5" />
+      <div className="relative max-w-full md:max-w-sm">
+        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+          <MapPin className="w-6 h-6" />
         </div>
         <input
           type="text"
@@ -72,27 +72,27 @@ export const StepLocation: React.FC<StepLocationProps> = ({ value, city, isValid
           placeholder="Enter Zip Code"
           value={value}
           onChange={(e) => onChange(e.target.value.replace(/\D/g, ''), '', false)}
-          className={`w-full pl-12 pr-10 py-4 rounded-xl border outline-none transition-all text-base shadow-sm placeholder:text-slate-400 appearance-none
+          className={`w-full pl-14 pr-12 py-5 rounded-2xl border outline-none transition-all text-lg font-medium shadow-sm placeholder:text-slate-400 appearance-none
             ${isValid 
               ? 'border-trust-500 ring-1 ring-trust-500 bg-green-50/50 text-slate-900' 
               : 'bg-white text-slate-900 border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10'
             }`}
         />
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          {loading && <Loader2 className="w-5 h-5 text-brand-500 animate-spin" />}
-          {isValid && !loading && <CheckCircle className="w-5 h-5 text-trust-500" />}
+        <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
+          {loading && <Loader2 className="w-6 h-6 text-brand-500 animate-spin" />}
+          {isValid && !loading && <CheckCircle className="w-6 h-6 text-trust-500" />}
         </div>
       </div>
       
       {isValid && !loading && city && (
         <div className="animate-fade-in space-y-3">
-          <div className="flex items-center gap-2 text-trust-700 font-medium bg-green-50 p-3 rounded-lg border border-green-100 max-w-sm shadow-sm">
-            <CheckCircle className="w-5 h-5 flex-shrink-0 text-trust-500" />
+          <div className="flex items-center gap-3 text-trust-800 font-medium bg-green-50 p-4 rounded-xl border border-green-100 max-w-full md:max-w-sm shadow-sm">
+            <CheckCircle className="w-5 h-5 flex-shrink-0 text-trust-600" />
             <span className="leading-tight">Service available in <strong>{city}</strong></span>
           </div>
           
           {/* Social Proof & Scarcity Triggers */}
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 max-w-sm pl-1">
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4 max-w-sm px-1">
              <div className="flex items-center gap-2 text-xs text-slate-600">
                 <div className="bg-brand-100 p-1 rounded-full">
                   <Users className="w-3 h-3 text-brand-600" />

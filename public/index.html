@@ -21,26 +21,25 @@
       }
     </script>
     <style>
+        html { scroll-padding-top: 100px; -webkit-tap-highlight-color: transparent; }
         .step-disabled { opacity: 0.5; pointer-events: none; filter: blur(1px); }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         /* Honeypot hidden field */
         .website-url-field { display: none !important; }
-        
-        /* Smooth progress bar transitions */
         .transition-smooth { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 700ms; }
 
-        /* Input Styles - Fix iOS Zoom & Appearance */
+        /* Mobile Optimized Inputs */
         .input-clean {
             width: 100%;
-            padding: 0.875rem 1rem;
+            padding: 1rem 1rem; /* Larger touch target */
             border-radius: 0.75rem;
             border: 1px solid #e2e8f0;
             background-color: white;
             color: #0f172a;
             outline: none;
             transition: all 0.2s;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             font-size: 16px; /* Prevents iOS zoom */
             appearance: none;
             -webkit-appearance: none;
@@ -50,21 +49,18 @@
             box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
         }
         
+        /* Mobile Optimized Selectors */
         .btn-select {
-            padding: 0.75rem;
-            border-radius: 0.5rem;
+            padding: 1rem 0.75rem; /* Taller buttons */
+            border-radius: 0.75rem;
             font-weight: 500;
-            font-size: 0.875rem;
+            font-size: 1rem;
             border: 1px solid #cbd5e1;
             background: white;
             color: #475569;
             transition: all 0.2s;
             flex: 1;
-            /* Prevent sticky hover on mobile */
-            -webkit-tap-highlight-color: transparent;
-        }
-        @media (hover: hover) {
-            .btn-select:hover { background: #f0f9ff; border-color: #7dd3fc; }
+            touch-action: manipulation;
         }
         .btn-select.active {
             background: #0284c7;
@@ -74,7 +70,7 @@
         }
 
         .service-card {
-            padding: 1.25rem;
+            padding: 1.5rem;
             border-radius: 0.75rem;
             border: 1px solid #cbd5e1;
             background: white;
@@ -83,12 +79,9 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
-        @media (hover: hover) {
-            .service-card:hover { border-color: #7dd3fc; transform: scale(1.005); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        }
-        .service-card:active { transform: scale(0.98); }
+        .service-card:active { transform: scale(0.98); background: #f8fafc; }
         .service-card.active {
             background: #f0f9ff;
             border-color: #0ea5e9;
@@ -104,45 +97,69 @@
             position: absolute;
             right: 0.75rem;
             bottom: 0.75rem;
-            width: 1.25rem;
-            height: 1.25rem;
+            width: 1.5rem;
+            height: 1.5rem;
             color: #0284c7;
         }
         .service-card.active .check-icon {
             transform: scale(1);
             opacity: 1;
         }
+
+        .pet-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+        .pet-btn.active {
+            background: #0284c7;
+            color: white;
+            border-color: #0284c7;
+            box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.2);
+        }
+        
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased">
 
-    <!-- Flash Sale Banner -->
-    <div class="bg-brand-900 text-white py-2 px-4 text-center text-xs sm:text-sm font-medium relative z-50">
-        <span class="inline-flex items-center gap-2">
-          <i data-lucide="clock" class="w-3 h-3 text-yellow-400"></i>
-          <span>Flash Offer: <span class="text-yellow-300 font-bold">Save $20</span> on your first Deep Clean. Ends soon!</span>
+    <!-- Flash Sale Banner - Mobile Compact -->
+    <div class="bg-brand-900 text-white py-2 px-3 text-center text-[10px] sm:text-sm font-medium leading-tight relative z-50">
+        <span class="inline-flex items-center justify-center gap-1.5">
+          <i data-lucide="clock" class="w-3 h-3 text-yellow-400 flex-shrink-0"></i>
+          <span>Flash Offer: <span class="text-yellow-300 font-bold">Save $20</span> on your first Deep Clean.</span>
         </span>
     </div>
 
     <!-- Header -->
-    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
-        <div class="container mx-auto px-4 h-16 flex items-center justify-between max-w-6xl">
-            <div class="flex items-center gap-2">
-                <i data-lucide="sparkles" class="text-brand-600"></i>
-                <span class="font-bold text-xl tracking-tight text-slate-900">Star<span class="text-brand-600">Cleaning</span></span>
+    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm transition-all">
+        <div class="container mx-auto px-4 h-14 md:h-16 flex items-center justify-between max-w-6xl">
+            <div class="flex items-center gap-1.5">
+                 <img src="https://img1.wsimg.com/isteam/ip/97a5d835-7b16-4991-b3c6-3d6956b6b82b/ESBOC%CC%A7O-STAR-CLEANING_full.png/:/rs=w:286,h:150,cg:true,m/cr=w:286,h:150/qt=q:95" alt="Star Cleaning" class="h-10 md:h-12 w-auto object-contain">
             </div>
-            <a href="tel:+18005550123" class="flex items-center gap-2 text-slate-600 hover:text-brand-600 font-medium transition-colors">
-                <div class="bg-brand-50 p-2 rounded-full hidden sm:block"><i data-lucide="phone" class="w-4 h-4 text-brand-600"></i></div>
-                <div class="flex flex-col items-end sm:items-start">
-                  <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold leading-none mb-0.5">Call for Quote</span>
-                  <span class="font-bold leading-none">(800) 555-0123</span>
+            <a href="tel:+18432979935" class="flex items-center gap-3 text-slate-600 hover:text-brand-600 font-medium transition-colors group">
+                <div class="flex flex-col items-end">
+                  <span class="text-[9px] text-slate-400 uppercase tracking-wider font-bold leading-none mb-0.5 hidden sm:block">Call for Quote</span>
+                  <span class="font-bold leading-none text-sm md:text-base group-hover:text-brand-600">(843) 297-9935</span>
+                </div>
+                <div class="bg-brand-50 p-2 md:p-2.5 rounded-full text-brand-600 border border-brand-100 group-active:scale-95 transition-transform">
+                  <i data-lucide="phone" class="w-4 h-4 md:w-5 md:h-5"></i>
                 </div>
             </a>
         </div>
     </header>
 
     <!-- Sticky Simplified Progress Bar -->
-    <div id="progress-container" class="sticky top-16 z-40 bg-slate-50/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm transition-all duration-500 ease-in-out py-3">
+    <div id="progress-container" class="sticky top-14 md:top-16 z-40 bg-slate-50/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm transition-all duration-500 ease-in-out py-3">
         <div class="max-w-2xl mx-auto px-4">
             <div id="progress-labels" class="flex justify-between px-1 overflow-hidden transition-all duration-500 ease-in-out max-h-8 opacity-100 mb-1.5">
                 <span id="step-lbl-1" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-brand-600 transition-colors duration-500">Location</span>
@@ -156,13 +173,13 @@
         </div>
     </div>
 
-    <!-- MAIN CONTAINER: Added pb-32 for mobile footer clearance -->
-    <main class="container mx-auto px-4 py-8 max-w-6xl pb-32 lg:pb-8">
+    <!-- MAIN CONTAINER -->
+    <main class="container mx-auto px-4 py-6 md:py-8 max-w-6xl pb-36 lg:pb-8">
         
-        <div class="flex flex-col lg:flex-row gap-8 items-start">
+        <div class="flex flex-col lg:flex-row gap-6 items-start">
             
             <!-- LEFT COLUMN: FORM -->
-            <div class="w-full lg:w-2/3 space-y-6">
+            <div class="w-full lg:w-2/3 space-y-4">
                 
                 <!-- SECURITY: HONEYPOT FIELD -->
                 <div class="website-url-field">
@@ -171,25 +188,25 @@
                 </div>
 
                 <!-- Step 1: Location -->
-                <div id="step-1" class="bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-200 p-6 md:p-8 transition-all hover:border-brand-200">
+                <div id="step-1" class="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200 p-5 md:p-8 transition-all hover:border-brand-200">
                     <div class="flex items-center gap-3 mb-4">
-                        <div id="step-1-indicator" class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">1</div>
-                        <h2 class="text-xl font-bold text-slate-900">Where do you need cleaning?</h2>
+                        <div id="step-1-indicator" class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+                        <h2 class="text-xl font-bold text-slate-900 leading-tight">Where do you need cleaning?</h2>
                     </div>
-                    <div class="relative max-w-sm">
-                        <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none"></i>
+                    <div class="relative max-w-full md:max-w-sm">
+                        <i data-lucide="map-pin" class="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 pointer-events-none"></i>
                         <input type="text" id="zipcode" maxlength="5" inputmode="numeric" placeholder="Enter Zip Code" 
-                            class="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-white text-slate-900 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all placeholder:text-slate-400 shadow-md text-base appearance-none">
-                        <div id="zip-loading" class="absolute right-4 top-1/2 -translate-y-1/2 hidden pointer-events-none"><i data-lucide="loader-2" class="animate-spin text-brand-600"></i></div>
-                        <div id="zip-success" class="absolute right-4 top-1/2 -translate-y-1/2 hidden pointer-events-none"><i data-lucide="check-circle" class="text-trust-500"></i></div>
+                            class="w-full pl-14 pr-12 py-5 rounded-2xl border border-slate-200 bg-white text-slate-900 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all placeholder:text-slate-400 shadow-md text-lg font-medium appearance-none">
+                        <div id="zip-loading" class="absolute right-5 top-1/2 -translate-y-1/2 hidden pointer-events-none"><i data-lucide="loader-2" class="animate-spin text-brand-600 w-6 h-6"></i></div>
+                        <div id="zip-success" class="absolute right-5 top-1/2 -translate-y-1/2 hidden pointer-events-none"><i data-lucide="check-circle" class="text-trust-500 w-6 h-6"></i></div>
                     </div>
                     <div id="zip-msg" class="mt-3 hidden fade-in space-y-3">
-                        <div class="flex items-center gap-2 text-trust-700 font-medium bg-green-50 p-3 rounded-lg border border-green-100 w-fit shadow-sm">
-                            <i data-lucide="check" class="w-4 h-4 flex-shrink-0 text-trust-500"></i>
-                            <span class="leading-tight">Service available in <strong id="city-name" class="text-slate-900"></strong></span>
+                        <div class="flex items-center gap-3 text-trust-800 font-medium bg-green-50 p-4 rounded-xl border border-green-100 max-w-full md:max-w-sm shadow-sm">
+                            <i data-lucide="check" class="w-5 h-5 flex-shrink-0 text-trust-600"></i>
+                            <span class="leading-tight">Service available in <strong id="city-name"></strong></span>
                         </div>
                         <!-- Social Proof Dynamic Inject -->
-                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 max-w-sm pl-1">
+                        <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4 max-w-sm px-1">
                              <div class="flex items-center gap-2 text-xs text-slate-600">
                                 <div class="bg-brand-100 p-1 rounded-full"><i data-lucide="users" class="w-3 h-3 text-brand-600"></i></div>
                                 <span>54 neighbors in <span id="city-name-social"></span> booked this week.</span>
@@ -203,9 +220,9 @@
                 </div>
 
                 <!-- Step 2: Contact -->
-                <div id="step-2" class="bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-200 p-6 md:p-8 step-disabled transition-all">
+                <div id="step-2" class="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200 p-5 md:p-8 step-disabled transition-all">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">2</div>
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
                         <h2 class="text-xl font-bold text-slate-900">Contact Info</h2>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -226,24 +243,48 @@
                 </div>
 
                 <!-- Step 3: Home Details -->
-                <div id="step-3" class="bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-200 p-6 md:p-8 step-disabled transition-all">
+                <div id="step-3" class="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200 p-5 md:p-8 step-disabled transition-all">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">3</div>
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
                         <h2 class="text-xl font-bold text-slate-900">Home Details</h2>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <!-- Bedrooms -->
                         <div class="space-y-2">
-                            <label class="text-sm font-bold text-slate-700">Bedrooms</label>
+                            <label class="text-sm font-bold text-slate-700 ml-1">Bedrooms</label>
                             <div class="flex gap-2" id="bedrooms-container">
                                 <!-- Generated by JS -->
                             </div>
                         </div>
                         <!-- Bathrooms -->
                         <div class="space-y-2">
-                            <label class="text-sm font-bold text-slate-700">Bathrooms</label>
+                            <label class="text-sm font-bold text-slate-700 ml-1">Bathrooms</label>
                             <div class="flex gap-2" id="bathrooms-container">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- People -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-700 ml-1">People in home</label>
+                            <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden w-full bg-white shadow-sm h-16">
+                                <button onclick="updatePeople(-1)" class="w-14 h-full flex items-center justify-center bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors">
+                                    <i data-lucide="minus" class="w-5 h-5"></i>
+                                </button>
+                                <div class="flex-1 h-full flex items-center justify-center font-bold text-slate-900 text-lg border-x border-slate-100 bg-slate-50/50" id="people-count">1</div>
+                                <button onclick="updatePeople(1)" class="w-14 h-full flex items-center justify-center bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors">
+                                    <i data-lucide="plus" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Pets (New Interactive Design) -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-700 ml-1">Pets</label>
+                            <div class="grid grid-cols-3 gap-3" id="pets-container">
                                 <!-- Generated by JS -->
                             </div>
                         </div>
@@ -251,16 +292,16 @@
                 </div>
 
                 <!-- Step 4: Service -->
-                <div id="step-4" class="bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-200 p-6 md:p-8 step-disabled transition-all">
+                <div id="step-4" class="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200 p-5 md:p-8 step-disabled transition-all">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">4</div>
+                        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
                         <h2 class="text-xl font-bold text-slate-900">Service Frequency</h2>
                     </div>
 
                     <!-- Tabs -->
                     <div class="flex p-1 bg-slate-100 rounded-xl mb-6 shadow-inner">
-                        <button onclick="setTab('recurring')" id="tab-recurring" class="flex-1 py-3 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all">Recurring (Save $)</button>
-                        <button onclick="setTab('onetime')" id="tab-onetime" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all">One-Time</button>
+                        <button onclick="setTab('recurring')" id="tab-recurring" class="flex-1 py-3.5 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all">Recurring (Save $)</button>
+                        <button onclick="setTab('onetime')" id="tab-onetime" class="flex-1 py-3.5 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all">One-Time</button>
                     </div>
 
                     <!-- Recurring Options -->
@@ -277,7 +318,7 @@
             </div>
 
             <!-- RIGHT COLUMN: SUMMARY (Sticky) -->
-            <div class="w-full lg:w-1/3 lg:sticky lg:top-36">
+            <div class="w-full lg:w-1/3 lg:sticky lg:top-36 hidden lg:block">
                 <div class="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
                     <div class="bg-slate-900 text-white p-4 text-center">
                         <h3 class="font-bold text-lg">Quote Summary</h3>
@@ -361,13 +402,47 @@
         </div>
     </main>
 
+    <!-- Mobile Sticky Footer - High Converting Layout -->
+    <div id="mobile-footer" class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-safe shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-50 animate-slide-up hidden">
+      <div class="flex flex-col gap-2 max-w-md mx-auto">
+        <!-- Price Row -->
+        <div class="flex justify-between items-end px-1">
+           <div class="text-xs text-slate-500 font-medium">Estimated Total</div>
+           <div class="text-xl font-bold text-slate-900 leading-none" id="mobile-total">$0</div>
+        </div>
+
+        <!-- Buttons Row -->
+        <div class="flex gap-2">
+           <a 
+             href="tel:+18432979935"
+             class="flex items-center justify-center bg-slate-100 text-slate-700 font-bold py-3.5 px-4 rounded-xl active:scale-95 transition-all w-16 flex-shrink-0"
+           >
+             <i data-lucide="phone" class="w-5 h-5"></i>
+           </a>
+           <button 
+             id="mobile-book-btn"
+             class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all text-base"
+           >
+             Request Quote
+           </button>
+        </div>
+        
+        <div class="text-[10px] text-center text-slate-400 font-medium">No payment required today.</div>
+      </div>
+    </div>
+
     <script>
         // --- CONSTANTS & CONFIG ---
         const state = {
             zip: '',
             city: '',
             contact: { valid: false },
-            home: { bedrooms: 1, bathrooms: 1 },
+            home: { 
+                bedrooms: 1, 
+                bathrooms: 1, 
+                people: 1,
+                pets: { dogs: false, cats: false, none: true }
+            },
             service: { type: 'Standard', frequency: 'Weekly' }, // Defaults
             tab: 'recurring'
         };
@@ -386,6 +461,11 @@
 
         const BEDROOM_OPTS = [1, 2, 3, 4, 5];
         const BATHROOM_OPTS = [1, 1.5, 2, 2.5, 3];
+        const PET_OPTS = [
+            { id: 'dogs', label: 'Dogs', icon: 'dog' },
+            { id: 'cats', label: 'Cats', icon: 'cat' },
+            { id: 'none', label: 'None', icon: 'ban' }
+        ];
 
         const RECURRING_OPTS = [
             { id: 'Weekly', label: 'Weekly', discount: '20% OFF' },
@@ -407,6 +487,8 @@
             step4: document.getElementById('step-4'),
             bedrooms: document.getElementById('bedrooms-container'),
             bathrooms: document.getElementById('bathrooms-container'),
+            pets: document.getElementById('pets-container'),
+            peopleCount: document.getElementById('people-count'),
             tcpa: document.getElementById('tcpa'),
             contactInputs: document.querySelectorAll('#step-2 input[type="text"], #step-2 input[type="tel"], #step-2 input[type="email"]'),
             summary: {
@@ -419,13 +501,17 @@
                 freq: document.getElementById('sum-freq'),
                 discount: document.getElementById('sum-discount'),
                 loader: document.getElementById('sum-loader')
-            }
+            },
+            mobileFooter: document.getElementById('mobile-footer'),
+            mobileTotal: document.getElementById('mobile-total'),
+            mobileBookBtn: document.getElementById('mobile-book-btn')
         };
 
         // --- INIT ---
-        lucide.createIcons();
         renderSelectors();
+        renderPets();
         renderServiceOptions();
+        lucide.createIcons();
 
         // --- EVENT LISTENERS ---
         
@@ -562,6 +648,44 @@
             fetchPrice();
         }
 
+        function renderPets() {
+             els.pets.innerHTML = PET_OPTS.map(pet => {
+                 const isActive = state.home.pets[pet.id];
+                 return `
+                    <button onclick="togglePet('${pet.id}')" class="pet-btn ${isActive ? 'active' : ''}">
+                        <i data-lucide="${pet.icon}" class="w-6 h-6"></i>
+                        <span class="text-xs font-bold">${pet.label}</span>
+                    </button>
+                 `;
+             }).join('');
+             lucide.createIcons(); // Re-init icons for newly added elements
+        }
+
+        window.togglePet = (id) => {
+            if (id === 'none') {
+                state.home.pets = { dogs: false, cats: false, none: true };
+            } else {
+                // Toggle clicked pet
+                state.home.pets[id] = !state.home.pets[id];
+                // Ensure none is false if a pet is selected
+                state.home.pets.none = false;
+                // If all pets deselected, check none
+                if (!state.home.pets.dogs && !state.home.pets.cats) {
+                    state.home.pets.none = true;
+                }
+            }
+            renderPets();
+            // Pricing usually doesn't change based on pets in this specific model, but valid to update just in case
+        }
+
+        window.updatePeople = (delta) => {
+            const newValue = state.home.people + delta;
+            if(newValue >= 1 && newValue <= 10) {
+                state.home.people = newValue;
+                els.peopleCount.innerText = newValue;
+            }
+        }
+
         function renderServiceOptions() {
             const checkIconSVG = `<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`;
 
@@ -586,6 +710,8 @@
                     ${checkIconSVG}
                 </div>
             `).join('');
+            
+            lucide.createIcons(); // Ensure icons render in cards
         }
 
         window.setTab = (tabName) => {
@@ -596,8 +722,8 @@
             const oneOpts = document.getElementById('onetime-options');
 
             if (tabName === 'recurring') {
-                recBtn.className = "flex-1 py-3 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all";
-                oneBtn.className = "flex-1 py-3 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all";
+                recBtn.className = "flex-1 py-3.5 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all";
+                oneBtn.className = "flex-1 py-3.5 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all";
                 recOpts.classList.remove('hidden');
                 // Force Animation Replay
                 recOpts.classList.remove('fade-in');
@@ -609,8 +735,8 @@
                 state.service.frequency = 'Weekly'; 
                 state.service.type = 'Standard';
             } else {
-                oneBtn.className = "flex-1 py-3 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all";
-                recBtn.className = "flex-1 py-3 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all";
+                oneBtn.className = "flex-1 py-3.5 text-sm font-bold rounded-lg bg-white text-brand-600 shadow-sm transition-all";
+                recBtn.className = "flex-1 py-3.5 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 transition-all";
                 oneOpts.classList.remove('hidden');
                 // Force Animation Replay
                 oneOpts.classList.remove('fade-in');
@@ -646,6 +772,9 @@
             els.summary.placeholder.classList.add('hidden');
             els.summary.content.classList.remove('hidden');
             els.summary.content.classList.add('fade-in');
+            
+            // Show Mobile Footer
+            els.mobileFooter.classList.remove('hidden');
         }
 
         function updateSummaryText() {
@@ -678,6 +807,7 @@
             // UI Feedback
             els.summary.total.classList.add('opacity-50');
             els.summary.loader.classList.remove('hidden');
+            els.mobileTotal.classList.add('opacity-50');
 
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(async () => {
@@ -696,7 +826,10 @@
                     const data = await response.json();
                     
                     // Update DOM
-                    els.summary.total.innerText = `$${Math.round(data.total)}`;
+                    const formattedTotal = `$${Math.round(data.total)}`;
+                    els.summary.total.innerText = formattedTotal;
+                    els.mobileTotal.innerText = formattedTotal;
+                    
                     if(data.discount > 0) {
                         els.summary.savings.innerText = `$${data.discount.toFixed(2)}`;
                         els.summary.savingsContainer.classList.remove('hidden');
@@ -708,14 +841,18 @@
                     console.error("Pricing error", error);
                 } finally {
                     els.summary.total.classList.remove('opacity-50');
+                    els.mobileTotal.classList.remove('opacity-50');
                     els.summary.loader.classList.add('hidden');
                 }
             }, 500); // 500ms debounce
         }
 
-        document.getElementById('book-btn').addEventListener('click', () => {
+        const handleBooking = () => {
             alert("Request received! Our team will call you shortly to confirm availability.");
-        });
+        };
+
+        document.getElementById('book-btn').addEventListener('click', handleBooking);
+        els.mobileBookBtn.addEventListener('click', handleBooking);
 
     </script>
 </body>

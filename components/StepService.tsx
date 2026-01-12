@@ -31,8 +31,8 @@ export const StepService: React.FC<StepServiceProps> = ({ service, onChange, dis
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-2">
-        <div className="bg-brand-100 text-brand-700 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">4</div>
-        <h2 className="text-xl font-bold text-slate-900">Choose Service</h2>
+        <div className="bg-brand-100 text-brand-700 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
+        <h2 className="text-xl font-bold text-slate-900 leading-tight">Choose Service</h2>
       </div>
 
       {/* Tabs */}
@@ -40,7 +40,7 @@ export const StepService: React.FC<StepServiceProps> = ({ service, onChange, dis
         <button
           disabled={disabled}
           onClick={() => handleTabChange('recurring')}
-          className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-3.5 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 touch-manipulation ${
             activeTab === 'recurring'
               ? 'bg-white text-brand-600 shadow-sm transform scale-[1.02]'
               : 'text-slate-500 hover:text-slate-700'
@@ -52,7 +52,7 @@ export const StepService: React.FC<StepServiceProps> = ({ service, onChange, dis
         <button
           disabled={disabled}
           onClick={() => handleTabChange('one-time')}
-          className={`flex-1 py-3 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-3.5 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 touch-manipulation ${
             activeTab === 'one-time'
               ? 'bg-white text-brand-600 shadow-sm transform scale-[1.02]'
               : 'text-slate-500 hover:text-slate-700'
@@ -79,7 +79,7 @@ export const StepService: React.FC<StepServiceProps> = ({ service, onChange, dis
                 key={opt.id}
                 disabled={disabled}
                 onClick={() => updateType(opt.id)}
-                className={`relative p-5 rounded-xl border text-left transition-all duration-200 ease-out group active:scale-[0.98] ${
+                className={`relative p-5 rounded-xl border text-left transition-all duration-200 ease-out group active:scale-[0.98] touch-manipulation ${
                   service.type === opt.id
                     ? 'border-brand-500 bg-brand-50 ring-2 ring-brand-500 ring-offset-2 scale-[1.02] shadow-md z-10'
                     : 'border-slate-300 bg-white hover:border-brand-300 hover:shadow-md hover:scale-[1.005] shadow-sm'
@@ -115,7 +115,7 @@ export const StepService: React.FC<StepServiceProps> = ({ service, onChange, dis
                 key={opt.id}
                 disabled={disabled}
                 onClick={() => updateFreq(opt.id)}
-                className={`relative p-5 rounded-xl border text-left transition-all duration-200 ease-out group active:scale-[0.98] ${
+                className={`relative p-5 rounded-xl border text-left transition-all duration-200 ease-out group active:scale-[0.98] touch-manipulation ${
                   service.frequency === opt.id
                     ? 'border-brand-500 bg-brand-50 ring-2 ring-brand-500 ring-offset-2 scale-[1.02] shadow-md z-10'
                     : 'border-slate-300 bg-white hover:border-brand-300 hover:shadow-md hover:scale-[1.005] shadow-sm'
@@ -159,7 +159,7 @@ export const StepService: React.FC<StepServiceProps> = ({ service, onChange, dis
 };
 
 const CheckCircleIcon = () => (
-  <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20">
+  <svg className="w-6 h-6 fill-current" viewBox="0 0 20 20">
     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
   </svg>
 );
