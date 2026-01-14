@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Send, ShieldCheck, PhoneCall, Info } from 'lucide-react';
+import { Check, ArrowRight, ShieldCheck, Calculator, Star } from 'lucide-react';
 import { BookingState, PriceCalculation } from '../types';
 
 interface SummarySidebarProps {
@@ -7,128 +7,129 @@ interface SummarySidebarProps {
   price: PriceCalculation;
   canBook: boolean;
   showPrice: boolean;
+  onRequestQuote: () => void;
 }
 
-export const SummarySidebar: React.FC<SummarySidebarProps> = ({ booking, price, canBook, showPrice }) => {
+export const SummarySidebar: React.FC<SummarySidebarProps> = ({ booking, price, canBook, showPrice, onRequestQuote }) => {
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
-        <div className="bg-slate-900 text-white p-4 text-center">
-          <h3 className="font-bold text-lg">Quote Summary</h3>
-        </div>
+      <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/80">
         
-        <div className="p-6 space-y-4">
+        <div className="p-6 lg:p-8 space-y-6">
+          <div className="flex justify-between items-start">
+             <div>
+               <h3 className="font-bold text-xl text-slate-900 leading-tight">Your Quote</h3>
+               <p className="text-sm text-slate-500 mt-1">Based on your home details</p>
+             </div>
+             {showPrice && (
+               <span className="bg-blue-50 text-brand-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide border border-blue-100 flex items-center gap-1">
+                 <Star className="w-3 h-3 fill-current" /> Preliminary
+               </span>
+             )}
+          </div>
+
           {!showPrice ? (
-            <div className="text-center py-8 space-y-4">
-               <div className="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                 <Info className="w-8 h-8 text-slate-400" />
+            <div className="text-center py-6 bg-slate-50 rounded-xl border border-slate-100 border-dashed">
+               <div className="bg-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm border border-slate-100">
+                 <Calculator className="w-6 h-6 text-slate-400" />
                </div>
-               <div className="space-y-1">
-                 <p className="font-bold text-slate-800">Instant Estimate</p>
-                 <p className="text-sm text-slate-500">
-                   Enter your details to generate your personalized estimate instantly.
-                 </p>
-               </div>
+               <p className="font-bold text-slate-800 text-sm">Instant Estimate</p>
+               <p className="text-xs text-slate-500 px-4 mt-1">
+                 Complete the form to see your price instantly.
+               </p>
             </div>
           ) : (
-            <>
-              {/* Services List */}
-              <div className="space-y-2 text-sm text-slate-600 pb-4 border-b border-slate-100 animate-fade-in">
-                <div className="flex justify-between">
-                  <span>{booking.homeDetails.bedrooms} Bed, {booking.homeDetails.bathrooms} Bath</span>
+            <div className="animate-fade-in">
+              {/* Line Items */}
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between text-sm group">
+                  <span className="text-slate-600 group-hover:text-slate-900 transition-colors">{booking.homeDetails.bedrooms} Bed, {booking.homeDetails.bathrooms} Bath</span>
                   <span className="font-medium text-slate-900">Included</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>{booking.service.type}</span>
+                <div className="flex justify-between text-sm group">
+                  <span className="text-slate-600 group-hover:text-slate-900 transition-colors">{booking.service.type}</span>
                   <span className="font-medium text-slate-900">Included</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>{booking.service.frequency}</span>
-                  <span className="text-green-600 font-bold">
-                    {price.discount > 0 ? `-$${price.discount.toFixed(2)}` : ''}
-                  </span>
+                <div className="flex justify-between text-sm group">
+                  <span className="text-slate-600 group-hover:text-slate-900 transition-colors">{booking.service.frequency}</span>
+                  {price.discount > 0 ? (
+                     <span className="text-green-600 font-bold bg-green-50 px-1.5 py-0.5 rounded text-xs">
+                        -${price.discount.toFixed(0)}
+                     </span>
+                  ) : (
+                    <span className="text-slate-400">-</span>
+                  )}
                 </div>
               </div>
 
-              {/* Price */}
-              <div className="animate-fade-in space-y-1">
+              <div className="border-t border-dashed border-slate-200 my-6"></div>
+
+              {/* Total Display */}
+              <div className="space-y-1 mb-6">
                  <div className="flex justify-between items-end">
-                    <span className="text-slate-500 font-medium">Estimated Total</span>
-                    <span className="text-3xl font-bold text-slate-900">${price.total.toFixed(0)}</span>
+                    <span className="text-slate-500 font-bold text-sm mb-1">Estimated Total</span>
+                    {/* Key prop ensures animation replays on change */}
+                    <div className="flex flex-col items-end">
+                      <span key={price.total} className="text-4xl font-extrabold text-slate-900 tracking-tight leading-none animate-[pricePop_0.4s_cubic-bezier(0.175,0.885,0.32,1.275)] origin-right">
+                          ${price.total.toFixed(0)}
+                      </span>
+                    </div>
                 </div>
-                <p className="text-[10px] text-slate-400 text-right leading-tight">
-                  *Final price confirmed upon availability check.
-                </p>
                 {price.discount > 0 && (
-                  <div className="text-right text-xs text-red-500 font-bold mt-1">
-                    Potential savings: ${price.discount.toFixed(2)}
-                  </div>
+                   <p className="text-xs text-green-600 text-right font-medium">
+                     Includes savings of ${price.discount.toFixed(0)}
+                   </p>
                 )}
               </div>
 
               {/* CTA */}
               <button
                 disabled={!canBook}
-                onClick={() => alert("Request received! Our team will call you shortly to confirm availability.")}
-                className={`w-full py-4 rounded-lg font-bold text-lg transition-all transform active:scale-95 group relative overflow-hidden ${
+                onClick={onRequestQuote}
+                className={`w-full py-4 rounded-xl font-bold text-lg transition-all transform active:scale-[0.98] shadow-lg hover:shadow-xl relative overflow-hidden group ${
                   canBook
-                    ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-lg hover:shadow-brand-500/30'
-                    : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    ? 'bg-gradient-to-r from-brand-600 to-brand-500 hover:to-brand-400 text-white shadow-brand-500/25'
+                    : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
                 }`}
               >
                 <div className="relative z-10 flex items-center justify-center gap-2">
-                   <span>Request Free Quote</span>
-                   {canBook && <Send className="w-5 h-5" />}
+                   <span>Check Availability</span>
+                   {canBook && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                 </div>
-                {canBook && (
-                  <div className="absolute inset-0 h-full w-full scale-0 rounded-lg transition-all duration-300 group-hover:scale-100 group-hover:bg-brand-700/50"></div>
-                )}
               </button>
 
-              <div className="flex justify-center items-center gap-1.5 text-[10px] text-slate-500 uppercase tracking-wide font-semibold">
-                <ShieldCheck className="w-3 h-3 text-green-500" />
-                <span>No Payment Required Today</span>
+              <div className="mt-4 flex flex-col gap-2 items-center text-center">
+                 <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium bg-slate-50 px-3 py-1.5 rounded-full">
+                    <ShieldCheck className="w-3.5 h-3.5 text-green-500" />
+                    <span>No payment required today</span>
+                 </div>
               </div>
-
-              {!canBook && (
-                <p className="text-xs text-center text-red-400">
-                  Please complete the form to see available slots.
-                </p>
-              )}
-            </>
+            </div>
           )}
         </div>
       </div>
 
-      {/* Trust Badges & Social Proof - Enhanced */}
-      <div className="bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-200 p-6 space-y-6">
-        
-        {/* Support Badge */}
-        <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
-             <div className="w-12 h-12 rounded-full bg-brand-50 border-2 border-brand-100 flex items-center justify-center flex-shrink-0">
-                <PhoneCall className="w-6 h-6 text-brand-500" />
-             </div>
-             <div>
-                <div className="font-bold text-slate-900 text-sm">Need Help?</div>
-                <div className="text-xs text-slate-500 leading-tight">Our team confirms every request personally.</div>
-             </div>
-        </div>
-
-        {/* Features List */}
-        <div className="space-y-3">
+      {/* Trust Badges - Minimalist */}
+      <div className="px-2 grid grid-cols-2 gap-y-2 gap-x-4">
           {[
-            "Free & No Obligation",
-            "Customized Cleaning Plans",
-            "Privacy Guaranteed"
+            "Licensed & Insured",
+            "Background Checked",
+            "100% Satisfaction",
+            "Secure Booking"
           ].map((item, i) => (
-            <div key={i} className="flex items-center gap-2 text-sm text-slate-600">
-              <Check className="w-4 h-4 text-brand-500 flex-shrink-0" />
+            <div key={i} className="flex items-center gap-2 text-xs font-medium text-slate-500">
+              <Check className="w-3.5 h-3.5 text-brand-500 flex-shrink-0" />
               <span>{item}</span>
             </div>
           ))}
-        </div>
-
       </div>
+      <style>{`
+        @keyframes pricePop {
+            0% { transform: scale(1); color: #0f172a; }
+            50% { transform: scale(1.15); color: #0ea5e9; }
+            100% { transform: scale(1); color: #0f172a; }
+        }
+      `}</style>
     </div>
   );
 };

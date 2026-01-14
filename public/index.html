@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>StarCleaning - Instant Quote</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       tailwind.config = {
@@ -15,6 +15,31 @@
             colors: {
               brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
               trust: { 500: '#22c55e' }
+            },
+            animation: {
+                'price-pop': 'pricePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                'modal-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                'fade-in': 'fadeIn 0.3s ease-out',
+                'scale-in': 'scaleIn 0.4s ease-out 0.2s both',
+            },
+            keyframes: {
+                pricePop: {
+                    '0%': { transform: 'scale(1)', color: '#0f172a' },
+                    '50%': { transform: 'scale(1.15)', color: '#0ea5e9' },
+                    '100%': { transform: 'scale(1)', color: '#0f172a' },
+                },
+                slideUp: {
+                    'from': { opacity: '0', transform: 'translateY(20px) scale(0.95)' },
+                    'to': { opacity: '1', transform: 'translateY(0) scale(1)' },
+                },
+                scaleIn: {
+                    'from': { transform: 'scale(0)' },
+                    'to': { transform: 'scale(1)' },
+                },
+                fadeIn: {
+                    'from': { opacity: '0' },
+                    'to': { opacity: '1' },
+                }
             }
           },
         },
@@ -24,7 +49,7 @@
         html { scroll-padding-top: 100px; -webkit-tap-highlight-color: transparent; }
         .step-disabled { opacity: 0.5; pointer-events: none; filter: blur(1px); }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
         /* Honeypot hidden field */
         .website-url-field { display: none !important; }
         .transition-smooth { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 700ms; }
@@ -47,6 +72,11 @@
         .input-clean:focus {
             border-color: #0ea5e9;
             box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+        }
+        /* Green border when valid and focused */
+        .input-clean:required:valid:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
         }
         
         /* Mobile Optimized Selectors */
@@ -132,26 +162,54 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased">
 
-    <!-- Flash Sale Banner - Mobile Compact -->
-    <div class="bg-brand-900 text-white py-2 px-3 text-center text-[10px] sm:text-sm font-medium leading-tight relative z-50">
+    <!-- Flash Sale Banner - Ultra Compact -->
+    <div class="bg-brand-900 text-white py-1.5 px-3 text-center text-[10px] font-medium leading-tight relative z-50">
         <span class="inline-flex items-center justify-center gap-1.5">
           <i data-lucide="clock" class="w-3 h-3 text-yellow-400 flex-shrink-0"></i>
-          <span>Flash Offer: <span class="text-yellow-300 font-bold">Save $20</span> on your first Deep Clean.</span>
+          <span>Flash Offer: <span class="text-yellow-300 font-bold">Save $20</span> first cleaning.</span>
         </span>
     </div>
 
     <!-- Header -->
-    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm transition-all">
+    <header class="bg-white border-b border-slate-100 sticky top-0 z-40 shadow-sm transition-all">
         <div class="container mx-auto px-4 h-14 md:h-16 flex items-center justify-between max-w-6xl">
-            <div class="flex items-center gap-1.5">
-                 <img src="https://img1.wsimg.com/isteam/ip/97a5d835-7b16-4991-b3c6-3d6956b6b82b/ESBOC%CC%A7O-STAR-CLEANING_full.png/:/rs=w:286,h:150,cg:true,m/cr=w:286,h:150/qt=q:95" alt="Star Cleaning" class="h-10 md:h-12 w-auto object-contain">
-            </div>
-            <a href="tel:+18432979935" class="flex items-center gap-3 text-slate-600 hover:text-brand-600 font-medium transition-colors group">
-                <div class="flex flex-col items-end">
-                  <span class="text-[9px] text-slate-400 uppercase tracking-wider font-bold leading-none mb-0.5 hidden sm:block">Call for Quote</span>
-                  <span class="font-bold leading-none text-sm md:text-base group-hover:text-brand-600">(843) 297-9935</span>
+            
+            <!-- Left: Brand -->
+            <div class="flex flex-col justify-center gap-1">
+                 <img src="https://img1.wsimg.com/isteam/ip/97a5d835-7b16-4991-b3c6-3d6956b6b82b/ESBOC%CC%A7O-STAR-CLEANING_full.png/:/rs=w:286,h:150,cg:true,m/cr=w:286,h:150/qt=q:95" alt="Star Cleaning" class="h-5 md:h-8 w-auto object-contain self-start">
+                 <!-- Compact Social Proof -->
+                <div class="flex items-center gap-1.5">
+                    <div class="flex text-yellow-400">
+                        <i data-lucide="star" class="w-2.5 h-2.5 fill-current"></i>
+                        <i data-lucide="star" class="w-2.5 h-2.5 fill-current"></i>
+                        <i data-lucide="star" class="w-2.5 h-2.5 fill-current"></i>
+                        <i data-lucide="star" class="w-2.5 h-2.5 fill-current"></i>
+                        <i data-lucide="star" class="w-2.5 h-2.5 fill-current"></i>
+                    </div>
+                    <div class="flex items-center gap-1 pl-1 border-l border-slate-200">
+                        <!-- Google SVG Icon -->
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                        </svg>
+                        <span class="text-[9px] font-bold text-slate-600 leading-none">4.9/5 Reviews</span>
+                    </div>
                 </div>
-                <div class="bg-brand-50 p-2 md:p-2.5 rounded-full text-brand-600 border border-brand-100 group-active:scale-95 transition-transform">
+            </div>
+            
+            <!-- Right: Call Action -->
+            <a href="tel:+18432979935" class="flex items-center gap-3 text-slate-700 active:text-brand-600 transition-colors group">
+                <div class="text-right hidden sm:block">
+                  <span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">Call for Quote</span>
+                  <span class="block font-bold text-lg leading-none">(843) 297-9935</span>
+                </div>
+                
+                <!-- Mobile Only Number -->
+                <span class="sm:hidden font-bold text-sm text-slate-700">(843) 297-9935</span>
+
+                <div class="bg-brand-50 p-2 rounded-full text-brand-600 border border-brand-100 shadow-sm group-active:scale-95 transition-transform">
                   <i data-lucide="phone" class="w-4 h-4 md:w-5 md:h-5"></i>
                 </div>
             </a>
@@ -159,7 +217,7 @@
     </header>
 
     <!-- Sticky Simplified Progress Bar -->
-    <div id="progress-container" class="sticky top-14 md:top-16 z-40 bg-slate-50/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm transition-all duration-500 ease-in-out py-3">
+    <div id="progress-container" class="sticky top-20 z-40 bg-slate-50/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm transition-all duration-500 ease-in-out py-3">
         <div class="max-w-2xl mx-auto px-4">
             <div id="progress-labels" class="flex justify-between px-1 overflow-hidden transition-all duration-500 ease-in-out max-h-8 opacity-100 mb-1.5">
                 <span id="step-lbl-1" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-brand-600 transition-colors duration-500">Location</span>
@@ -176,6 +234,57 @@
     <!-- MAIN CONTAINER -->
     <main class="container mx-auto px-4 py-6 md:py-8 max-w-6xl pb-36 lg:pb-8">
         
+        <!-- NEW HERO SECTION -->
+        <div class="mb-6 animate-fade-in">
+            <div class="bg-slate-900 rounded-3xl p-6 md:p-10 text-white relative overflow-hidden shadow-xl ring-1 ring-white/10">
+                
+                <!-- New Image: Bright, Clean Living Room -->
+                <img 
+                    src="https://media.istockphoto.com/id/1031043754/photo/new-modern-living-room-with-kitchen-new-home-interior-photography-wooden-floor.jpg?s=612x612&w=0&k=20&c=CmnYvn3hXsNGJ5oOHyV76RmWlDdlljjrcIST_0ubKOw=" 
+                    alt="Sparkling Clean Home" 
+                    class="absolute inset-0 w-full h-full object-cover opacity-60"
+                />
+                
+                <!-- Gradient Overlay - Optimized -->
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/60 to-transparent"></div>
+
+                <div class="relative z-20 max-w-xl">
+                    <!-- Premium Glass Badge -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5 border border-amber-200/30 bg-white/10 backdrop-blur-md shadow-[0_0_15px_-3px_rgba(251,191,36,0.3)]">
+                        <i data-lucide="trophy" class="w-3.5 h-3.5 text-amber-300 drop-shadow-sm"></i>
+                        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-50 text-shadow-sm">
+                            #1 Rated in South Carolina
+                        </span>
+                    </div>
+                    
+                    <h1 class="text-2xl sm:text-4xl font-extrabold leading-tight mb-3 drop-shadow-lg">
+                        Your home, <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-100">spotless.</span><br />
+                        Your free time, <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-100">reclaimed.</span>
+                    </h1>
+                    
+                    <p class="text-slate-200 text-sm sm:text-lg mb-6 leading-relaxed max-w-sm drop-shadow-md">
+                        Get an instant quote in 60 seconds. <span class="text-white font-semibold border-b border-brand-400/50">100% Satisfaction Guaranteed.</span>
+                    </p>
+
+                    <!-- Mobile Optimized Bullets -->
+                    <div class="flex flex-col gap-2.5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="bg-green-500/20 p-1 rounded-full backdrop-blur-sm">
+                                <i data-lucide="clock" class="w-3.5 h-3.5 text-green-300 flex-shrink-0"></i>
+                            </div>
+                            <span class="text-xs sm:text-sm font-medium text-white/90">See your exact price instantly</span>
+                        </div>
+                         <div class="flex items-center gap-2.5">
+                            <div class="bg-green-500/20 p-1 rounded-full backdrop-blur-sm">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-300 flex-shrink-0"></i>
+                            </div>
+                            <span class="text-xs sm:text-sm font-medium text-white/90">No credit card required to book</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="flex flex-col lg:flex-row gap-6 items-start">
             
             <!-- LEFT COLUMN: FORM -->
@@ -226,10 +335,10 @@
                         <h2 class="text-xl font-bold text-slate-900">Contact Info</h2>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <input type="text" id="fname" placeholder="First Name" class="input-clean" autocomplete="given-name">
-                        <input type="text" id="lname" placeholder="Last Name" class="input-clean" autocomplete="family-name">
-                        <input type="tel" id="phone" placeholder="(555) 555-5555" class="input-clean" autocomplete="tel">
-                        <input type="email" id="email" placeholder="email@address.com" class="input-clean" autocomplete="email">
+                        <input type="text" id="fname" placeholder="First Name" class="input-clean" autocomplete="given-name" required>
+                        <input type="text" id="lname" placeholder="Last Name" class="input-clean" autocomplete="family-name" required>
+                        <input type="tel" id="phone" placeholder="(555) 555-5555" class="input-clean" autocomplete="tel" required>
+                        <input type="email" id="email" placeholder="email@address.com" class="input-clean" autocomplete="email" required>
                     </div>
                     <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
                         <input type="checkbox" id="tcpa" class="mt-1 w-5 h-5 text-brand-600 rounded border-gray-300 focus:ring-brand-500 cursor-pointer">
@@ -319,83 +428,92 @@
 
             <!-- RIGHT COLUMN: SUMMARY (Sticky) -->
             <div class="w-full lg:w-1/3 lg:sticky lg:top-36 hidden lg:block">
-                <div class="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
-                    <div class="bg-slate-900 text-white p-4 text-center">
-                        <h3 class="font-bold text-lg">Quote Summary</h3>
-                    </div>
+                <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/80">
                     
-                    <div class="p-6">
-                        <div id="summary-placeholder" class="text-center py-8">
-                            <div class="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i data-lucide="info" class="text-slate-400"></i>
-                            </div>
-                            <p class="font-bold text-slate-800 mb-1">Instant Estimate</p>
-                            <p class="text-sm text-slate-500">Enter your details to generate your personalized estimate instantly.</p>
+                    <div class="p-6 lg:p-8 space-y-6">
+                        <!-- Clean Header -->
+                        <div class="flex justify-between items-start">
+                             <div>
+                               <h3 class="font-bold text-xl text-slate-900 leading-tight">Your Quote</h3>
+                               <p class="text-sm text-slate-500 mt-1">Based on your home details</p>
+                             </div>
+                             <span id="badge-preliminary" class="hidden bg-blue-50 text-brand-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide border border-blue-100 flex items-center gap-1">
+                                <i data-lucide="star" class="w-3 h-3 fill-current"></i> Preliminary
+                             </span>
                         </div>
 
-                        <div id="summary-content" class="hidden space-y-4">
-                            <div class="space-y-2 text-sm text-slate-600 pb-4 border-b border-slate-100">
-                                <div class="flex justify-between">
-                                    <span id="sum-home">1 Bed, 1 Bath</span>
-                                    <span class="font-bold text-slate-900">Included</span>
+                        <!-- Placeholder -->
+                        <div id="summary-placeholder" class="text-center py-6 bg-slate-50 rounded-xl border border-slate-100 border-dashed">
+                             <div class="bg-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm border border-slate-100">
+                                <i data-lucide="calculator" class="w-6 h-6 text-slate-400"></i>
+                             </div>
+                             <p class="font-bold text-slate-800 text-sm">Instant Estimate</p>
+                             <p class="text-xs text-slate-500 px-4 mt-1">
+                               Complete the form to see your price instantly.
+                             </p>
+                        </div>
+
+                        <!-- Content -->
+                        <div id="summary-content" class="hidden animate-fade-in">
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between text-sm group">
+                                    <span class="text-slate-600 group-hover:text-slate-900 transition-colors"><span id="sum-home"></span></span>
+                                    <span class="font-medium text-slate-900">Included</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span id="sum-freq">Weekly</span>
-                                    <span id="sum-discount" class="text-trust-500 font-bold">-20%</span>
-                                </div>
-                            </div>
-                            
-                            <div class="space-y-1">
-                                <div class="flex justify-between items-end">
-                                    <span class="text-slate-500 font-medium">Estimated Total</span>
-                                    <div class="text-right">
-                                        <span id="sum-loader" class="hidden"><i data-lucide="loader-2" class="animate-spin text-slate-400"></i></span>
-                                        <span id="sum-total" class="text-3xl font-bold text-slate-900">$0</span>
-                                    </div>
-                                </div>
-                                <p class="text-[10px] text-slate-400 text-right leading-tight">*Final price confirmed upon availability check.</p>
-                                <div id="sum-savings-container" class="text-right text-xs text-red-500 font-bold hidden">
-                                    Potential savings: <span id="sum-savings"></span>
+                                <div class="flex justify-between text-sm group">
+                                    <span class="text-slate-600 group-hover:text-slate-900 transition-colors"><span id="sum-freq"></span></span>
+                                    <span id="sum-discount" class="text-green-600 font-bold bg-green-50 px-1.5 py-0.5 rounded text-xs"></span>
                                 </div>
                             </div>
 
-                            <button id="book-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-lg shadow-lg shadow-brand-500/30 transition-all active:scale-95 mt-2 flex items-center justify-center gap-2 group">
-                                <span>Request Free Quote</span>
-                                <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                            <div class="border-t border-dashed border-slate-200 my-6"></div>
+                            
+                            <!-- Total -->
+                            <div class="space-y-1 mb-6">
+                                <div class="flex justify-between items-end">
+                                    <span class="text-slate-500 font-bold text-sm mb-1">Estimated Total</span>
+                                    <div class="flex flex-col items-end">
+                                        <span id="sum-loader" class="hidden"><i data-lucide="loader-2" class="animate-spin text-slate-400"></i></span>
+                                        <span id="sum-total" class="text-4xl font-extrabold text-slate-900 tracking-tight leading-none transition-all duration-300 origin-right">$0</span>
+                                    </div>
+                                </div>
+                                <p id="sum-savings-container" class="hidden text-xs text-green-600 text-right font-medium">
+                                    Includes savings of <span id="sum-savings"></span>
+                                </p>
+                            </div>
+
+                            <!-- CTA -->
+                            <button id="book-btn" class="w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:to-brand-400 text-white shadow-brand-500/25 py-4 rounded-xl font-bold text-lg transition-all transform active:scale-[0.98] shadow-lg hover:shadow-xl relative overflow-hidden group">
+                                <div class="relative z-10 flex items-center justify-center gap-2">
+                                   <span>Check Availability</span>
+                                   <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                                </div>
                             </button>
-                            <div class="flex justify-center items-center gap-1.5 text-[10px] text-slate-500 uppercase tracking-wide font-semibold">
-                                <i data-lucide="shield-check" class="w-3 h-3 text-green-500"></i>
-                                <span>No Payment Required Today</span>
+
+                            <div class="mt-4 flex flex-col gap-2 items-center text-center">
+                                 <div class="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium bg-slate-50 px-3 py-1.5 rounded-full">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-green-500"></i>
+                                    <span>No payment required today</span>
+                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Trust Badges -->
-                <div class="mt-6 bg-white rounded-xl shadow-lg shadow-slate-200/50 border border-slate-200 p-6 space-y-4">
-                    
-                    <!-- Support Badge -->
-                    <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
-                         <div class="w-12 h-12 rounded-full bg-brand-50 border-2 border-brand-100 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="phone-call" class="w-6 h-6 text-brand-500"></i>
-                         </div>
-                         <div>
-                            <div class="font-bold text-slate-900 text-sm">Need Help?</div>
-                            <div class="text-xs text-slate-500 leading-tight">Our team confirms every request personally.</div>
-                         </div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-2 text-sm text-slate-600">
-                            <i data-lucide="check" class="text-brand-500 w-4 h-4"></i> <span>Free & No Obligation</span>
-                        </div>
-                        <div class="flex items-center gap-2 text-sm text-slate-600">
-                            <i data-lucide="check" class="text-brand-500 w-4 h-4"></i> <span>Customized Cleaning Plans</span>
-                        </div>
-                        <div class="flex items-center gap-2 text-sm text-slate-600">
-                            <i data-lucide="check" class="text-brand-500 w-4 h-4"></i> <span>Privacy Guaranteed</span>
-                        </div>
-                    </div>
+                <div class="mt-4 px-2 grid grid-cols-2 gap-y-2 gap-x-4">
+                      <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+                          <i data-lucide="check" class="w-3.5 h-3.5 text-brand-500 flex-shrink-0"></i> <span>Licensed & Insured</span>
+                      </div>
+                       <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+                          <i data-lucide="check" class="w-3.5 h-3.5 text-brand-500 flex-shrink-0"></i> <span>Background Checked</span>
+                      </div>
+                       <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+                          <i data-lucide="check" class="w-3.5 h-3.5 text-brand-500 flex-shrink-0"></i> <span>100% Satisfaction</span>
+                      </div>
+                       <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+                          <i data-lucide="check" class="w-3.5 h-3.5 text-brand-500 flex-shrink-0"></i> <span>Secure Booking</span>
+                      </div>
                 </div>
             </div>
 
@@ -403,32 +521,96 @@
     </main>
 
     <!-- Mobile Sticky Footer - High Converting Layout -->
-    <div id="mobile-footer" class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-safe shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-50 animate-slide-up hidden">
-      <div class="flex flex-col gap-2 max-w-md mx-auto">
-        <!-- Price Row -->
-        <div class="flex justify-between items-end px-1">
-           <div class="text-xs text-slate-500 font-medium">Estimated Total</div>
-           <div class="text-xl font-bold text-slate-900 leading-none" id="mobile-total">$0</div>
-        </div>
+    <div id="mobile-footer" class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 pb-safe shadow-[0_-4px_25px_-5px_rgba(0,0,0,0.15)] z-50 animate-slide-up hidden">
+      <div class="flex justify-between items-center max-w-md mx-auto gap-4">
+        <!-- Price Side -->
+         <div class="flex flex-col">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Estimated Total</span>
+            <span class="text-2xl font-extrabold text-slate-900 leading-none transition-all duration-300 origin-left" id="mobile-total">$0</span>
+         </div>
 
         <!-- Buttons Row -->
-        <div class="flex gap-2">
+        <div class="flex gap-2 flex-1 justify-end">
            <a 
              href="tel:+18432979935"
-             class="flex items-center justify-center bg-slate-100 text-slate-700 font-bold py-3.5 px-4 rounded-xl active:scale-95 transition-all w-16 flex-shrink-0"
+             class="flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-600 hover:text-brand-600 rounded-xl w-14 transition-all active:scale-95"
            >
              <i data-lucide="phone" class="w-5 h-5"></i>
            </a>
            <button 
              id="mobile-book-btn"
-             class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all text-base"
+             class="flex-1 max-w-[200px] bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all text-base flex items-center justify-center gap-2"
            >
-             Request Quote
+             <span>Book Now</span>
+             <i data-lucide="chevron-right" class="w-4 h-4"></i>
            </button>
         </div>
-        
-        <div class="text-[10px] text-center text-slate-400 font-medium">No payment required today.</div>
       </div>
+      <div class="text-center mt-2.5">
+         <span class="text-[10px] text-slate-400 font-medium bg-slate-50 px-2 py-0.5 rounded-full">
+            No payment required today
+         </span>
+      </div>
+    </div>
+
+    <!-- SUCCESS MODAL (Vanilla JS Implementation) -->
+    <div id="success-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+        <!-- Backdrop -->
+        <div id="modal-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+        
+        <!-- Content -->
+        <div id="modal-content" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 translate-y-4 opacity-0">
+             <!-- Header Graphic -->
+            <div class="bg-green-50 p-8 text-center border-b border-green-100">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 ring-8 ring-green-50 shadow-sm">
+                    <i data-lucide="check" class="w-10 h-10 text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900">Request Received!</h2>
+                <p class="text-slate-600 mt-2">We've secured your estimate.</p>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 space-y-6">
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide text-center">What happens next?</h3>
+                    
+                    <div class="flex gap-4 items-start bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="bg-white p-2 rounded-full shadow-sm border border-slate-100 text-brand-600 shrink-0">
+                            <i data-lucide="clock" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900 text-sm">Review in Progress</p>
+                            <p class="text-xs text-slate-500 leading-relaxed">Our team is reviewing your home details to confirm availability.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 items-start bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="bg-white p-2 rounded-full shadow-sm border border-slate-100 text-brand-600 shrink-0">
+                            <i data-lucide="phone" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900 text-sm">Expect a Call Shortly</p>
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                            Look for a call from <span class="font-bold text-slate-900">(843) 297-9935</span>. We'll finalize your price and lock in your slot.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="closeModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl shadow-lg transform transition-all active:scale-95">
+                    Got it, thanks!
+                </button>
+                 <div class="flex justify-center items-center gap-2 text-[10px] text-slate-400">
+                    <i data-lucide="shield-check" class="w-3 h-3"></i>
+                    <span>Your information is secure and private.</span>
+                </div>
+            </div>
+
+            <!-- Close X -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
     </div>
 
     <script>
@@ -500,7 +682,8 @@
                 home: document.getElementById('sum-home'),
                 freq: document.getElementById('sum-freq'),
                 discount: document.getElementById('sum-discount'),
-                loader: document.getElementById('sum-loader')
+                loader: document.getElementById('sum-loader'),
+                badge: document.getElementById('badge-preliminary')
             },
             mobileFooter: document.getElementById('mobile-footer'),
             mobileTotal: document.getElementById('mobile-total'),
@@ -772,6 +955,7 @@
             els.summary.placeholder.classList.add('hidden');
             els.summary.content.classList.remove('hidden');
             els.summary.content.classList.add('fade-in');
+            els.summary.badge.classList.remove('hidden');
             
             // Show Mobile Footer
             els.mobileFooter.classList.remove('hidden');
@@ -805,9 +989,10 @@
             }
 
             // UI Feedback
-            els.summary.total.classList.add('opacity-50');
+            // Add a subtle "processing" look to price without full opacity fade to keep it readable
+            els.summary.total.classList.add('text-slate-400', 'scale-95');
+            els.mobileTotal.classList.add('text-slate-400', 'scale-95');
             els.summary.loader.classList.remove('hidden');
-            els.mobileTotal.classList.add('opacity-50');
 
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(async () => {
@@ -836,19 +1021,50 @@
                     } else {
                         els.summary.savingsContainer.classList.add('hidden');
                     }
+
+                    // TRIGGER POP ANIMATION
+                    els.summary.total.classList.remove('text-slate-400', 'scale-95');
+                    els.mobileTotal.classList.remove('text-slate-400', 'scale-95');
+                    
+                    // Re-trigger CSS animation reflow
+                    els.summary.total.classList.remove('animate-price-pop');
+                    els.mobileTotal.classList.remove('animate-price-pop');
+                    void els.summary.total.offsetWidth; 
+                    void els.mobileTotal.offsetWidth;
+                    
+                    els.summary.total.classList.add('animate-price-pop');
+                    els.mobileTotal.classList.add('animate-price-pop');
                     
                 } catch (error) {
                     console.error("Pricing error", error);
                 } finally {
-                    els.summary.total.classList.remove('opacity-50');
-                    els.mobileTotal.classList.remove('opacity-50');
                     els.summary.loader.classList.add('hidden');
                 }
-            }, 500); // 500ms debounce
+            }, 350); // Slightly faster debounce for responsiveness
         }
 
+        // MODAL LOGIC
+        const modal = document.getElementById('success-modal');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+
         const handleBooking = () => {
-            alert("Request received! Our team will call you shortly to confirm availability.");
+            modal.classList.remove('hidden');
+            // Trigger entry animation
+            setTimeout(() => {
+                modalBackdrop.classList.remove('opacity-0');
+                modalContent.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+            
+            // Re-trigger check icon animation if needed, though Lucide SVG might handle it
+        };
+
+        window.closeModal = () => {
+             modalBackdrop.classList.add('opacity-0');
+             modalContent.classList.add('translate-y-4', 'opacity-0');
+             setTimeout(() => {
+                 modal.classList.add('hidden');
+             }, 300);
         };
 
         document.getElementById('book-btn').addEventListener('click', handleBooking);

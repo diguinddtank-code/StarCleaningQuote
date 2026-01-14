@@ -1,13 +1,15 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
+import { Hero } from './components/Hero';
 import { StepLocation } from './components/StepLocation';
 import { StepContact } from './components/StepContact';
 import { StepHomeDetails } from './components/StepHomeDetails';
 import { StepService } from './components/StepService';
 import { SummarySidebar } from './components/SummarySidebar';
+import { SuccessModal } from './components/SuccessModal';
 import { BookingState, ServiceFrequency, ServiceType } from './types';
 import { PRICING } from './constants';
-import { Phone } from 'lucide-react';
+import { Phone, ChevronRight } from 'lucide-react';
 
 const INITIAL_STATE: BookingState = {
   zipCode: '',
@@ -40,6 +42,7 @@ const INITIAL_STATE: BookingState = {
 export default function App() {
   const [booking, setBooking] = useState<BookingState>(INITIAL_STATE);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Validation Logic
   const isZipComplete = booking.isZipValid;
@@ -115,6 +118,11 @@ export default function App() {
     setBooking((prev) => ({ ...prev, ...updates }));
   };
 
+  const handleBookingRequest = () => {
+    setIsModalOpen(true);
+    // Here you would typically also send the data to your API
+  };
+
   // Scroll Detection
   useEffect(() => {
     const handleScroll = () => {
@@ -129,7 +137,7 @@ export default function App() {
       <Header />
 
       {/* Sticky Progress Bar */}
-      <div className={`sticky top-14 md:top-16 z-40 bg-slate-50/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm transition-all duration-500 ease-in-out ${isScrolled ? 'py-2' : 'py-3'}`}>
+      <div className={`sticky top-20 z-40 bg-slate-50/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm transition-all duration-500 ease-in-out ${isScrolled ? 'py-2' : 'py-3'}`}>
         <div className="max-w-3xl mx-auto px-4">
             {/* Labels container with collapse transition */}
             <div className={`flex justify-between px-1 overflow-hidden transition-all duration-500 ease-in-out ${isScrolled ? 'max-h-0 opacity-0 mb-0' : 'max-h-8 opacity-100 mb-1.5'}`}>
@@ -147,6 +155,10 @@ export default function App() {
       </div>
 
       <main className="flex-grow container mx-auto px-4 py-6 md:py-8 max-w-6xl pb-32 lg:pb-8">
+        
+        {/* NEW: Hero Section for High Conversion */}
+        <Hero />
+
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           
           {/* Left Column: Form Steps */}
@@ -211,46 +223,60 @@ export default function App() {
               price={price} 
               canBook={isContactComplete} 
               showPrice={showPrice}
+              onRequestQuote={handleBookingRequest}
             />
           </div>
 
         </div>
       </main>
 
-      {/* Mobile Sticky Footer - High Converting Layout */}
+      {/* Mobile Sticky Footer - Clean & High Converting */}
       {showPrice && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 pb-safe shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-50 animate-slide-up">
-          <div className="flex flex-col gap-2 max-w-md mx-auto">
-            {/* Price Row */}
-            <div className="flex justify-between items-end px-1">
-               <div className="text-xs text-slate-500 font-medium">Estimated Total</div>
-               <div className="text-xl font-bold text-slate-900 leading-none">${price.total.toFixed(0)}</div>
-            </div>
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 pb-safe shadow-[0_-4px_25px_-5px_rgba(0,0,0,0.15)] z-50 animate-slide-up">
+          <div className="flex justify-between items-center max-w-md mx-auto gap-4">
+             {/* Price Side */}
+             <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Estimated Total</span>
+                <span key={price.total} className="text-2xl font-extrabold text-slate-900 leading-none animate-[pricePop_0.4s_cubic-bezier(0.175,0.885,0.32,1.275)] origin-left">
+                    ${price.total.toFixed(0)}
+                </span>
+             </div>
 
-            {/* Buttons Row */}
-            <div className="flex gap-2">
-               <a 
-                 href="tel:+18432979935"
-                 className="flex items-center justify-center bg-slate-100 text-slate-700 font-bold py-3.5 px-4 rounded-xl active:scale-95 transition-all w-16 flex-shrink-0"
-               >
-                 <Phone className="w-5 h-5" />
-               </a>
-               <button 
-                 className="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all text-base"
-                 onClick={() => {
-                   alert("Request received! Our team will call you shortly to confirm availability.");
-                 }}
-               >
-                 Request Quote
-               </button>
-            </div>
-            
-            <div className="text-[10px] text-center text-slate-400 font-medium">No payment required today.</div>
+             {/* Action Side */}
+             <div className="flex gap-2 flex-1 justify-end">
+                <a 
+                   href="tel:+18432979935"
+                   className="flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-600 hover:text-brand-600 rounded-xl w-14 transition-all active:scale-95"
+                 >
+                   <Phone className="w-5 h-5" />
+                 </a>
+                 <button 
+                   className="flex-1 max-w-[200px] bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all text-base flex items-center justify-center gap-2"
+                   onClick={handleBookingRequest}
+                 >
+                   <span>Book Now</span>
+                   <ChevronRight className="w-4 h-4" />
+                 </button>
+             </div>
+          </div>
+          <div className="text-center mt-2.5">
+             <span className="text-[10px] text-slate-400 font-medium bg-slate-50 px-2 py-0.5 rounded-full">
+                No payment required today
+             </span>
           </div>
         </div>
       )}
+
+      {/* Success Modal */}
+      <SuccessModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      
       <style>{`
         .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        @keyframes pricePop {
+            0% { transform: scale(1); color: #0f172a; }
+            50% { transform: scale(1.15); color: #0ea5e9; }
+            100% { transform: scale(1); color: #0f172a; }
+        }
       `}</style>
     </div>
   );
